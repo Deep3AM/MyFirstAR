@@ -57,72 +57,42 @@ public class CustomNNSolver : MonoBehaviour
 
         if (!isFront)
         {
-            while (true)
+            tryInt++;
+            _t2d = new Texture2D(_output.width, _output.height, _output.graphicsFormat, TextureCreationFlags.None);
+            RenderTexture.active = _output;
+            _t2d.ReadPixels(new Rect(0, 0, _output.width, _output.height), 0, 0);
+            _t2d.Apply();
+            List<float> tempFloat = _t2d.GetRawTextureData<float>().ToList();
+            Debug.Log(tempFloat.Max());
+            if (tryInt == 100)
             {
-                tryInt++;
-                _t2d = new Texture2D(_output.width, _output.height, _output.graphicsFormat, TextureCreationFlags.None);
-                RenderTexture.active = _output;
-                _t2d.ReadPixels(new Rect(0, 0, _output.width, _output.height), 0, 0);
-                _t2d.Apply();
-                Debug.Log(_width);
-                Debug.Log(_t2d.GetRawTextureData<float>().Max());
-                List<float> tempFloat = _t2d.GetRawTextureData<float>().ToList();
-                if (tryInt == 100)
+                isFront = true;
+                float width = 0;
+                for (int i = 0; i < tempFloat.Count; i++)
                 {
-                    isFront = true;
-                    float width = 0;
-                    for (int i = 0; i < tempFloat.Count; i++)
+                    if (MathF.Abs(tempFloat[i] - tempFloat.Max()) < 50f)
                     {
-                        if (MathF.Abs(tempFloat[i] - tempFloat.Max()) < 50f)
-                        {
-                            var ix = i % 256;
-                            var iy = i / 256;
+                        var ix = i % 256;
+                        var iy = i / 256;
 
-                            width = ix * imageScale;
-                            break;
-                        }
+                        width = 128 - ix;
+                        break;
                     }
-                    Debug.Log(_width);
-                    frontPlane.SetActive(true);
-                    rearPlane.SetActive(true);
-                    rightPlane.SetActive(true);
-                    leftPlane.SetActive(true);
-                    float maxDepth = tempFloat.Max();
-                    while (true)
-                    {
-                        tempFloat.Remove(maxDepth);
-                        int validCheckNum = 0;
-                        for (int i = 0; i < tempFloat.Count; i++)
-                        {
-                            if (Mathf.Abs(tempFloat[i] - maxDepth) < 200f)
-                            {
-                                validCheckNum++;
-                                tempFloat.RemoveAt(i);
-                            }
-                        }
-                        Debug.Log(validCheckNum);
-                        if (validCheckNum >= 100)
-                        {
-                            Debug.Log("It is valid Depth");
-                            Debug.Log(maxDepth);
-                            break;
-                        }
-                        else
-                        {
-                            Debug.Log("Invalid Depth");
-                        }
-                    }
-                    frontPlane.transform.position = new Vector3(0, 0, tempFloat.Max() * wallSpawnMultiplier);
-                    rearPlane.transform.position = new Vector3(0, 0, -tempFloat.Max() * wallSpawnMultiplier);
-                    rightPlane.transform.position = new Vector3(width * 0.06f, 0, 0);
-                    leftPlane.transform.position = new Vector3(-width * 0.06f, 0, 0);
-                    OnPlaneSpawned.Invoke(tempFloat.Max() * depthMultiplier, width * 0.06f);
-                    gameObject.SetActive(false);
-                    break;
                 }
+                Debug.Log(_width);
+                frontPlane.SetActive(true);
+                rearPlane.SetActive(true);
+                rightPlane.SetActive(true);
+                leftPlane.SetActive(true);
+                frontPlane.transform.position = new Vector3(0, 0, tempFloat.Max() * wallSpawnMultiplier);
+                rearPlane.transform.position = new Vector3(0, 0, -tempFloat.Max() * wallSpawnMultiplier);
+                rightPlane.transform.position = new Vector3(width * 0.06f, 0, 0);
+                leftPlane.transform.position = new Vector3(-width * 0.06f, 0, 0);
+                OnPlaneSpawned.Invoke(tempFloat.Max() * depthMultiplier, width * 0.06f);
+                gameObject.SetActive(false);
             }
-        }
 
+        }
     }
 
     private void OnDestroy() => DeallocateObjects();
