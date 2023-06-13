@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Barracuda;
@@ -17,14 +16,12 @@ public class CustomNNSolver : MonoBehaviour
     public GameObject rightPlane;
     public GameObject leftPlane;
     public float wallSpawnMultiplier;
-    public float depthMultiplier;
+    public float sideWallSpawnMultiplier;
     public UnityEvent<float, float> OnPlaneSpawned;
     [Header("Object References")]
     public NNModel neuralNetworkModel;
     public Texture inputTexture;
 
-    [Header("Parameters")]
-    public bool calculateDepthExtents;
     public Texture InputTexture
     {
         get => inputTexture;
@@ -64,21 +61,10 @@ public class CustomNNSolver : MonoBehaviour
             _t2d.Apply();
             List<float> tempFloat = _t2d.GetRawTextureData<float>().ToList();
             Debug.Log(tempFloat.Max());
-            if (tryInt == 100)
+            if (tryInt == 10)
             {
                 isFront = true;
-                float width = 0;
-                for (int i = 0; i < tempFloat.Count; i++)
-                {
-                    if (MathF.Abs(tempFloat[i] - tempFloat.Max()) < 50f)
-                    {
-                        var ix = i % 256;
-                        var iy = i / 256;
-
-                        width = 128 - ix;
-                        break;
-                    }
-                }
+                float width = tempFloat.Max() * Mathf.Tan(Mathf.Deg2Rad * 40) * wallSpawnMultiplier * sideWallSpawnMultiplier;
                 Debug.Log(_width);
                 frontPlane.SetActive(true);
                 rearPlane.SetActive(true);
@@ -86,9 +72,9 @@ public class CustomNNSolver : MonoBehaviour
                 leftPlane.SetActive(true);
                 frontPlane.transform.position = new Vector3(0, 0, tempFloat.Max() * wallSpawnMultiplier);
                 rearPlane.transform.position = new Vector3(0, 0, -tempFloat.Max() * wallSpawnMultiplier);
-                rightPlane.transform.position = new Vector3(width * 0.06f, 0, 0);
-                leftPlane.transform.position = new Vector3(-width * 0.06f, 0, 0);
-                OnPlaneSpawned.Invoke(tempFloat.Max() * depthMultiplier, width * 0.06f);
+                rightPlane.transform.position = new Vector3(width, 0, 0);
+                leftPlane.transform.position = new Vector3(-width, 0, 0);
+                OnPlaneSpawned.Invoke(tempFloat.Max() * wallSpawnMultiplier, width);
                 gameObject.SetActive(false);
             }
 

@@ -171,16 +171,17 @@ public class RayHitObject : MonoBehaviour
                 }
 
             }
-            else
+
+        }
+        else
+        {
+            if (redCube.activeInHierarchy)
             {
-                if (redCube.activeInHierarchy)
-                {
-                    redCube.SetActive(false);
-                }
-                if (greenCube.activeInHierarchy)
-                {
-                    greenCube.SetActive(false);
-                }
+                redCube.SetActive(false);
+            }
+            if (greenCube.activeInHierarchy)
+            {
+                greenCube.SetActive(false);
             }
         }
     }

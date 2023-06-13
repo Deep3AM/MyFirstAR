@@ -5,7 +5,6 @@ public class WorldGenerator : MonoBehaviour
 {
     public GameObject block;
     public GameObject environment;
-    public Transform player;
     public List<Grid> grids;
     public Material debuggingKeyMaterial;
     public Material debuggingHideMaterial;
@@ -49,7 +48,7 @@ public class WorldGenerator : MonoBehaviour
         for (int i = 0; i < grids.Count / 20; i++)
         {
             int n = Random.Range(0, grids.Count);
-            while (hideRandNums.Contains(n))
+            while (hideRandNums.Contains(n) || keyRandNums.Contains(n))
             {
                 n = Random.Range(0, grids.Count);
             }
@@ -66,7 +65,8 @@ public class WorldGenerator : MonoBehaviour
             else if (hideRandNums.Contains(i))
             {
                 grids[i].gridCategory = GridCategory.HIDE;
-                grids[i].GetComponent<MeshRenderer>().material = debuggingHideMaterial;
+                grids[i].hideBox.SetActive(true);
+                grids[i].isHideable = true;
             }
             else
             {

@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 6850283428549401003}
   - component: {fileID: 1703422468566107763}
   - component: {fileID: 1530717827851923042}
+  - component: {fileID: 5557774969326566173}
   m_Layer: 0
   m_Name: HideObj
   m_TagString: Untagged
@@ -310,7 +311,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -328,8 +329,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ec6607d3e007c4dac5939a6f176a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInArea: 0
   thisGrid: {fileID: 8935468527522568490}
+  isTrigger: 0
+--- !u!54 &5557774969326566173
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158607429710560000}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1680244211914003480
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +802,7 @@ MonoBehaviour:
   whiteMaterial: {fileID: 2100000, guid: f2f1130ad7661594e87e9d5b2e8f13f5, type: 2}
   redMaterial: {fileID: 2100000, guid: 38d6fff235ce9ea4d8c28b16fc0fe493, type: 2}
   holeColliderDetector: {fileID: 1530717827851923042}
-  isHideable: 1
+  isHideable: 0
   gridCategory: 0
   hpBlocks:
   - {fileID: 8774338088899557545}
@@ -793,8 +821,11 @@ MonoBehaviour:
   - {fileID: 5645365108716545239}
   - {fileID: 4138376897483805617}
   - {fileID: 6137222212072688767}
-  hideBox: {fileID: 0}
+  hideBox: {fileID: 1158607429710560000}
   attachAudio: {fileID: 8300000, guid: 288379c380d341340bdbe787dbb1bf90, type: 3}
+  recoverAudio: {fileID: 8300000, guid: b00eec8dbd5b5a54eb59743b79f58aa0, type: 3}
+  enemy: {fileID: 0}
+  isUsed: 0
 --- !u!54 &-368994618646132163
 Rigidbody:
   m_ObjectHideFlags: 0

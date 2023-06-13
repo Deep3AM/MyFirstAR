@@ -6,13 +6,10 @@ public class TestScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //worldGenerator.GenerateTerrain();
-        //StartCoroutine(enemyPool.EnemySpawnCoroutine());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        worldGenerator.GenerateTerrain(5, 5);
+        foreach (Grid g in worldGenerator.grids)
+        {
+            g.ForDebugging();
+        }
     }
 }

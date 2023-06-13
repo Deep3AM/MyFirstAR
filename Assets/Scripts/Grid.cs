@@ -18,22 +18,34 @@ public class Grid : MonoBehaviour
     public HoleColliderDetector holeColliderDetector;
     private Player player;
     private int blockHP = 16;
-    public bool isHideable = true;
+    public bool isHideable = false;
     public GridCategory gridCategory;
     private IEnumerator diggingCo = null;
     public List<GameObject> hpBlocks;
     public GameObject hideBox;
     public AudioClip attachAudio;
+    public AudioClip recoverAudio;
     private AudioSource audioSource;
-
+    public Enemy enemy;
+    public bool isUsed = false;
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
         audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
-
+        if (isHideable && holeColliderDetector.isTrigger)
+        {
+            if (OVRInput.Get(OVRInput.Button.Two))
+            {
+                isHideable = false;
+                enemy.StopEnemyCoroutine(false);
+                hideBox.SetActive(false);
+                audioSource.PlayOneShot(recoverAudio);
+            }
+        }
     }
 
     private void OnMouseEnter()
@@ -118,12 +130,7 @@ public class Grid : MonoBehaviour
                 audioSource.Stop();
                 isNotDigged = false;
                 GetComponent<Renderer>().enabled = false;
-                if (gridCategory == GridCategory.HIDE)
-                {
-                    isHideable = true;
-                    hideBox.SetActive(true);
-                }
-                else if (gridCategory == GridCategory.ATTACHABLE)
+                if (gridCategory == GridCategory.ATTACHABLE)
                 {
                     player.attachableNum++;
                     audioSource.PlayOneShot(attachAudio);
@@ -143,5 +150,14 @@ public class Grid : MonoBehaviour
         isHideable = false;
         yield return new WaitForSeconds(30);
         isHideable = true;
+    }
+
+    public void ForDebugging()
+    {
+        if (gridCategory == GridCategory.HIDE)
+        {
+            isHideable = true;
+            hideBox.SetActive(true);
+        }
     }
 }
